@@ -4,6 +4,10 @@ const app = express();
 const { createServer } = require("http");
 const httpServer = createServer(app);
 
+// Pubsub
+const pubsub = require('./pubsub')
+// pubsub.installSubscriptionHandlers(httpServer)
+
 // Files handling
 const multer = require("multer");
 const fs = require("fs");
@@ -20,9 +24,9 @@ const { typeDefs, resolvers } = require("./schema");
 
 // Apollo
 const { ApolloServer } = require("apollo-server-express");
-const {
-  ApolloServerPluginLandingPageLocalDefault,
-} = require("apollo-server-core");
+// const {
+//   ApolloServerPluginLandingPageLocalDefault,
+// } = require("apollo-server-core");
 
 // Socket IO
 const { initSocket } = require('./socket');
@@ -54,7 +58,7 @@ async function startServer(typeDefs, resolvers) {
     resolvers,
     csrfPrevention: true,
     cache: "bounded",
-    plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+  //  plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
   });
 
   // Start apollo
