@@ -16,6 +16,11 @@ import { generateFileHash } from "./Interfaz2.js";
 let taskToEdit = "";
 let archivosEditar = [];
 
+function getHost(){
+  return "http://localhost:8080"
+  // return `https://${getCodeSandboxHost(8080)}`
+}
+
 document
   .getElementById("uploadButton")
   .addEventListener("click", function (event) {
@@ -105,7 +110,7 @@ async function guardarArchivo(archivo, panelId, taskId) {
 
   try {
     const response = await fetch(
-      "https://" + getCodeSandboxHost(8080) + "/assets",
+      getHost() + "/assets",
       {
         method: "POST",
         body: formData,
@@ -205,7 +210,7 @@ async function descargarArch(archId, taskId, panelId) {
     panelId: panelId,
   });
   try {
-    let url = `https://${getCodeSandboxHost(8080)}/download?url=${
+    let url = `${getHost()}/download?url=${
       file.data.file.url
     }&name=${file.data.file.filename}`;
     const a = document.createElement("a");
