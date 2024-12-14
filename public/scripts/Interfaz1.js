@@ -57,9 +57,9 @@ window.onload = async function () {
         const nuevaTarea = document.createElement("div");
         nuevaTarea.className = "task card p-2 mb-2";
         nuevaTarea.draggable = true;
-        nuevaTarea.ondragstart = function (event) {};
         nuevaTarea.id = carta.id;
-
+        nuevaTarea.setAttribute("ondragstart", "dragStartHandler(event)")
+        nuevaTarea.setAttribute("ondragend", "dragEndHandler(event)")
         nuevaTarea.innerHTML = `
                     <h5 id="titulo-${carta.id}" class="titulo">${
           carta.title

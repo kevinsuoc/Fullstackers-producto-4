@@ -28,21 +28,21 @@
             <div class="col-md-4 col-12">
                 <div class="column">
                     <h5 class="column-name">To-Do</h5>
-                    <div class="tasks" id="todo-tasks"></div>   
+                    <div class="tasks" id="todo-tasks" ondragover="dragOverHandler(event)" ondrop="dropHandler(event)" ondragenter="dragEnterHandler(event)" ondragleave="dragLeaveHandler(event)"></div>   
                     <button type="button" class="create-task-button btn btn-primary botooon" data-click-source="todo" data-bs-toggle="modal" data-bs-target="#addTaskModal">+ Nueva Tarjeta</button>
                 </div>
             </div>
             <div class="col-md-4 col-12">
                 <div class="column">
                     <h5 class="column-name">Doing</h5>
-                    <div class="tasks" id="doing-tasks"></div>
+                    <div class="tasks" id="doing-tasks" ondragover="dragOverHandler(event)" ondrop="dropHandler(event)" ondragenter="dragEnterHandler(event)" ondragleave="dragLeaveHandler(event)"></div>
                     <button type="button" class="create-task-button btn btn-primary botooon" data-click-source="doing" data-bs-toggle="modal" data-bs-target="#addTaskModal">+ Nueva Tarjeta</button>
                 </div>
             </div>
             <div class="col-md-4 col-12">
                 <div class="column">
                     <h5 class="column-name">Done</h5>
-                    <div class="tasks" id="done-tasks"></div>
+                    <div class="tasks" id="done-tasks" ondragover="dragOverHandler(event)" ondrop="dropHandler(event)" ondragenter="dragEnterHandler(event)" ondragleave="dragLeaveHandler(event)"></div>
                     <button type="button" class="create-task-button btn btn-primary botooon" data-click-source="done" data-bs-toggle="modal" data-bs-target="#addTaskModal">+ Nueva Tarjeta</button>
                 </div>
             </div>

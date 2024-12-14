@@ -1,25 +1,71 @@
 // Source: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/drop_event
+// Icons source. https://www.flaticon.com/
 import { changeTaskColumn } from './querisFr.js';
 import { socket } from './socket.js';
 
-// HTML DOM Element, a task
-let draggedTask = null;
-
 // ondragstart event listener: sets dragged if a "task" is being drag
-ondragstart = (event) => {  
-    if (event.target.classList.contains("task"))
-        draggedTask = event.target;
-};
+// ondragstart ="dragStartHandler(event)"
+function dragStartHandler(event){
+    event.dataTransfer.setData("text/plain", event.target.id)
+    event.dataTransfer.effectAllowed = "copy";
+    event.target.style.backgroundColor = '#242424';
 
-// ondragover event listener. If not present, the browser will default to doing nothing
-ondragover = (event) => {
+    const img = new Image();
+    img.src = "../assets/drag.png";
+    img.style.width = "50px";
+    img.style.height = "50px";
+
+    document.body.appendChild(img);
+
+    event.dataTransfer.setDragImage(img, 25, 25)
+
+    setTimeout(() => img.remove(), 0);
+}
+window.dragStartHandler = dragStartHandler
+
+// ondragover="dragOverHandler(event)"
+function dragOverHandler(event) {
+    event.dataTransfer.dropEffect = "move";
     event.preventDefault();
-};
+}
+window.dragOverHandler = dragOverHandler
 
-// ondrop event listener.
-ondrop = (event) => {
+// ondragenter="dragEnterHandler(event)"
+function dragEnterHandler(event){
+    event.preventDefault()
+    event.dataTransfer.dropEffect = "move";
+
+    if(event.target.classList.contains("tasks")){
+        event.target.style.borderColor = "#007bff"
+    }
+    if(event.target.classList.contains("task")){
+        event.target.parentNode.style.borderColor = "#007bff"
+    }
+}
+window.dragEnterHandler = dragEnterHandler
+
+// ondragleave="dragLeaveHandler(event)"
+function dragLeaveHandler(event){
+    event.preventDefault()
+
+    if(event.target.classList.contains("tasks")){
+        event.target.style.borderColor = "#242424"
+    }
+}
+window.dragLeaveHandler = dragLeaveHandler
+
+// ondragenter="dragEndHandler(event)"
+function dragEndHandler(event) {
+    event.target.style.backgroundColor = '#1170dd';
+}
+window.dragEndHandler = dragEndHandler
+
+// ondragdrop="dropHandler(event)"
+function dropHandler(event) {
     // Necessary to override browser default
     event.preventDefault();
+
+    const draggedTask = document.getElementById(event.dataTransfer.getData("text/plain"))
 
     // DOM element variable
     let dropTarget = event.target;
@@ -45,10 +91,11 @@ ondrop = (event) => {
         dropTarget.insertAdjacentElement("beforebegin", draggedTask);
     }
     
-    moverLS(draggedTask.id, targetColumn, dropTarget);
+    document.getElementById(targetColumn).style.borderColor = "#242424"
 
-    draggedTask = null;
+    moverLS(draggedTask.id, targetColumn, dropTarget);
 };
+window.dropHandler = dropHandler
 
 async function moverLS(taskId, targetColumn, dropTarget){
     const para = new URLSearchParams(window.location.search);

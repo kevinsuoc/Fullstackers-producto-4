@@ -142,7 +142,8 @@ socket.on("taskAdded", async (arg, taskId) => {
   const newTask = document.createElement("div");
   newTask.className = "task card p-2 mb-2";
   newTask.draggable = true;
-  newTask.ondragstart = function (event) {};
+  newTask.setAttribute("ondragstart", "dragStartHandler(event)");
+  newTask.setAttribute("ondragend", "dragEndHandler(event)")
   newTask.innerHTML = `
         <h5 id="titulo-${taskId}" class="titulo">${arg.title}</h5>
         <p id="desc-${taskId}" class="descripcion">${arg.description}</p>
