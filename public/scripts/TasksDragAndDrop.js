@@ -3,10 +3,16 @@
 import { changeTaskColumn } from './querisFr.js';
 import { socket } from './socket.js';
 
+let dropTargetTask = null;
+let dropTargetColumn = null;
+let draggedTask = null;
+let separador = null;
+
 // ondragstart event listener: sets dragged if a "task" is being drag
 // ondragstart ="dragStartHandler(event)"
 function dragStartHandler(event){
-    event.dataTransfer.setData("text/plain", event.target.id)
+    draggedTask = event.target
+
     event.dataTransfer.effectAllowed = "move";
     event.target.style.backgroundColor = '#242424';
 
@@ -20,6 +26,15 @@ function dragStartHandler(event){
     event.dataTransfer.setDragImage(img, 25, 25)
 
     setTimeout(() => img.remove(), 0);
+
+    separador = document.createElement("div")
+    separador.id = "taskSeparator"
+    separador.style.backgroundColor = "#007bff";
+    separador.style.width = "100%";
+    separador.style.height = "10px";
+    separador.style.margin = "0";
+    separador.style.padding = "0";
+    separador.style.borderRadius = "10px"
 }
 window.dragStartHandler = dragStartHandler
 
@@ -36,30 +51,23 @@ function dragEnterHandler(event){
 
     event.dataTransfer.dropEffect = "move";
 
-    let dropTarget = event.target.closest(".tasks")
+    if (dropTargetColumn)
+        dropTargetColumn.style.borderColor = "#242424";
+
+    dropTargetColumn = event.target.closest(".tasks")
+    dropTargetTask = event.target.closest(".task")
     let target = event.target
 
-    dropTarget.style.borderColor = "#007bff"
+    dropTargetColumn.style.borderColor = "#007bff"
 
-    // Test
-    const separador = document.createElement("div")
-    separador.id = "taskSeparator"
-    separador.style.backgroundColor = "#007bff";
-    separador.style.width = "100%";
-    separador.style.height = "10px";
-    separador.style.margin = "0";
-    separador.style.padding = "0";
-    separador.style.borderRadius = "10px"
-
-    if (document.getElementById("taskSeparator")){
-        document.getElementById("taskSeparator").remove()
-    }
-
-    let taskTarget = event.target.closest(".task")
-    if (target.classList.contains("tasks")) {
+    if (target.classList.contains("tasks") && (!separador.value || separador.value != target.id)) {
         target.appendChild(separador)
-    } else if (taskTarget){
-        taskTarget.insertAdjacentElement("beforebegin", separador);
+        console.log(separador, separador.value, event)
+        separador.value = target.id
+    } else if (dropTargetTask && dropTargetTask != draggedTask && (!separador.value || separador.value != event.relatedTarget.id)){
+        dropTargetTask.insertAdjacentElement("beforebegin", separador)
+        separador.value = dropTargetTask.id
+        console.log(separador, separador.value , event)
     }
 }
 window.dragEnterHandler = dragEnterHandler
@@ -86,11 +94,13 @@ function dragEndHandler(event) {
     document.getElementById('doing-tasks').style.borderColor  = '#242424';
     document.getElementById('done-tasks').style.borderColor  = '#242424';
 
-    // Test
     let lineaBreak = document.getElementById("taskSeparator")
     if (lineaBreak){
         lineaBreak.remove()
     }
+
+    separador = null;
+    draggedTask = null;
 }
 window.dragEndHandler = dragEndHandler
 
@@ -98,8 +108,6 @@ window.dragEndHandler = dragEndHandler
 function dropHandler(event) {
     // Necessary to override browser default
     event.preventDefault();
-
-    const draggedTask = document.getElementById(event.dataTransfer.getData("text/plain"))
 
     // DOM element variable
     let dropTarget = event.target;
