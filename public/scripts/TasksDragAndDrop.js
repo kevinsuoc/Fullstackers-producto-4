@@ -6,7 +6,6 @@ import { socket } from './socket.js';
 let dropTargetTask = null;
 let dropTargetColumn = null;
 let draggedTask = null;
-let separador = null;
 
 // ondragstart event listener: sets dragged if a "task" is being drag
 // ondragstart ="dragStartHandler(event)"
@@ -26,15 +25,6 @@ function dragStartHandler(event){
     event.dataTransfer.setDragImage(img, 25, 25)
 
     setTimeout(() => img.remove(), 0);
-
-    separador = document.createElement("div")
-    separador.id = "taskSeparator"
-    separador.style.backgroundColor = "#007bff";
-    separador.style.width = "100%";
-    separador.style.height = "10px";
-    separador.style.margin = "0";
-    separador.style.padding = "0";
-    separador.style.borderRadius = "10px"
 }
 window.dragStartHandler = dragStartHandler
 
@@ -60,14 +50,10 @@ function dragEnterHandler(event){
 
     dropTargetColumn.style.borderColor = "#007bff"
 
-    if (target.classList.contains("tasks") && (!separador.value || separador.value != target.id)) {
-        target.appendChild(separador)
-        console.log(separador, separador.value, event)
-        separador.value = target.id
-    } else if (dropTargetTask && dropTargetTask != draggedTask && (!separador.value || separador.value != event.relatedTarget.id)){
-        dropTargetTask.insertAdjacentElement("beforebegin", separador)
-        separador.value = dropTargetTask.id
-        console.log(separador, separador.value , event)
+    if (target.classList.contains("tasks")) {
+        target.appendChild(draggedTask)
+    } else if (dropTargetTask && dropTargetTask != draggedTask){
+        dropTargetTask.insertAdjacentElement("beforebegin", draggedTask)
     }
 }
 window.dragEnterHandler = dragEnterHandler
@@ -99,7 +85,6 @@ function dragEndHandler(event) {
         lineaBreak.remove()
     }
 
-    separador = null;
     draggedTask = null;
 }
 window.dragEndHandler = dragEndHandler
