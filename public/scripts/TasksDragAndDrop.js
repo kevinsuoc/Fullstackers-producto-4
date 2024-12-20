@@ -35,11 +35,16 @@ function dragEnterHandler(event){
     event.preventDefault()
     event.dataTransfer.dropEffect = "move";
 
-    if(event.target.classList.contains("tasks")){
-        event.target.style.borderColor = "#007bff"
+    let dropTarget = event.target
+
+    while (dropTarget && !dropTarget.classList.contains("tasks")) {
+        dropTarget = dropTarget.parentNode;
     }
-    if(event.target.classList.contains("task")){
-        event.target.parentNode.style.borderColor = "#007bff"
+
+    console.log(dropTarget)
+
+    if(dropTarget.classList.contains("tasks")){
+        dropTarget.style.borderColor = "#007bff"
     }
 }
 window.dragEnterHandler = dragEnterHandler
@@ -51,12 +56,16 @@ function dragLeaveHandler(event){
     if(event.target.classList.contains("tasks")){
         event.target.style.borderColor = "#242424"
     }
+    
 }
 window.dragLeaveHandler = dragLeaveHandler
 
-// ondragenter="dragEndHandler(event)"
+// ondragend ="dragEndHandler(event)"
 function dragEndHandler(event) {
     event.target.style.backgroundColor = '#1170dd';
+    document.getElementById('todo-tasks').style.borderColor  = '#242424';
+    document.getElementById('doing-tasks').style.borderColor  = '#242424';
+    document.getElementById('done-tasks').style.borderColor  = '#242424';
 }
 window.dragEndHandler = dragEndHandler
 
@@ -71,7 +80,7 @@ function dropHandler(event) {
     let dropTarget = event.target;
 
     // Searchs the tree upwards until it finds a "task" or tasks column, "tasks".
-    while (dropTarget && !(dropTarget.classList.contains("tasks") || dropTarget.classList.contains("task"))) {
+    while (dropTarget && dropTarget.classList && !(dropTarget.classList.contains("tasks") || dropTarget.classList.contains("task"))) {
         dropTarget = dropTarget.parentNode;
     }
 
@@ -91,8 +100,6 @@ function dropHandler(event) {
         dropTarget.insertAdjacentElement("beforebegin", draggedTask);
     }
     
-    document.getElementById(targetColumn).style.borderColor = "#242424"
-
     moverLS(draggedTask.id, targetColumn, dropTarget);
 };
 window.dropHandler = dropHandler
