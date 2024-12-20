@@ -13,7 +13,7 @@ function validarDatos(elemento){
         return true;
     }
 }
-z
+
 // Función para manejar la creación de un nuevo tablero
 document.getElementById('confirmCreateBoardButton').addEventListener('click', async function() {
     const newBoardName = document.getElementById('newBoardName');

@@ -7,7 +7,7 @@ import { socket } from './socket.js';
 // ondragstart ="dragStartHandler(event)"
 function dragStartHandler(event){
     event.dataTransfer.setData("text/plain", event.target.id)
-    event.dataTransfer.effectAllowed = "copy";
+    event.dataTransfer.effectAllowed = "move";
     event.target.style.backgroundColor = '#242424';
 
     const img = new Image();
@@ -25,8 +25,8 @@ window.dragStartHandler = dragStartHandler
 
 // ondragover="dragOverHandler(event)"
 function dragOverHandler(event) {
-    event.dataTransfer.dropEffect = "move";
     event.preventDefault();
+    event.dataTransfer.dropEffect = "move";
 }
 window.dragOverHandler = dragOverHandler
 
