@@ -33,18 +33,33 @@ window.dragOverHandler = dragOverHandler
 // ondragenter="dragEnterHandler(event)"
 function dragEnterHandler(event){
     event.preventDefault()
+
     event.dataTransfer.dropEffect = "move";
 
-    let dropTarget = event.target
+    let dropTarget = event.target.closest(".tasks")
+    let target = event.target
 
-    while (dropTarget && !dropTarget.classList.contains("tasks")) {
-        dropTarget = dropTarget.parentNode;
+    dropTarget.style.borderColor = "#007bff"
+
+    // Test
+    const separador = document.createElement("div")
+    separador.id = "taskSeparator"
+    separador.style.backgroundColor = "#007bff";
+    separador.style.width = "100%";
+    separador.style.height = "10px";
+    separador.style.margin = "0";
+    separador.style.padding = "0";
+    separador.style.borderRadius = "10px"
+
+    if (document.getElementById("taskSeparator")){
+        document.getElementById("taskSeparator").remove()
     }
 
-    console.log(dropTarget)
-
-    if(dropTarget.classList.contains("tasks")){
-        dropTarget.style.borderColor = "#007bff"
+    let taskTarget = event.target.closest(".task")
+    if (target.classList.contains("tasks")) {
+        target.appendChild(separador)
+    } else if (taskTarget){
+        taskTarget.insertAdjacentElement("beforebegin", separador);
     }
 }
 window.dragEnterHandler = dragEnterHandler
@@ -53,19 +68,29 @@ window.dragEnterHandler = dragEnterHandler
 function dragLeaveHandler(event){
     event.preventDefault()
 
-    if(event.target.classList.contains("tasks")){
-        event.target.style.borderColor = "#242424"
+    const dropZone = event.target.closest(".tasks");
+
+    if (dropZone && !dropZone.contains(event.relatedTarget)) {
+        dropZone.style.borderColor = "#242424";
+        if (document.getElementById("taskSeparator"))
+            document.getElementById("taskSeparator").remove()
     }
-    
 }
 window.dragLeaveHandler = dragLeaveHandler
 
 // ondragend ="dragEndHandler(event)"
 function dragEndHandler(event) {
     event.target.style.backgroundColor = '#1170dd';
+
     document.getElementById('todo-tasks').style.borderColor  = '#242424';
     document.getElementById('doing-tasks').style.borderColor  = '#242424';
     document.getElementById('done-tasks').style.borderColor  = '#242424';
+
+    // Test
+    let lineaBreak = document.getElementById("taskSeparator")
+    if (lineaBreak){
+        lineaBreak.remove()
+    }
 }
 window.dragEndHandler = dragEndHandler
 
