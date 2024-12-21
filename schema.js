@@ -6,6 +6,7 @@ const TaskController = require('./controllers/TaskController')
 const PanelController = require('./controllers/PanelController')
 const FileController = require('./controllers/FileController')
 
+
 const typeDefs = gql(`
    type File{
         id: ID!
@@ -52,6 +53,12 @@ const typeDefs = gql(`
         removeTask(panelId: ID!, id: ID!): Task,
         removeFile(id: ID!, taskId: ID!, panelId: ID!): File
     }
+
+    # Creamos la subscription
+    type Subscription 
+    {
+        taskColumnChanged: Task
+    }
 `)
 
 const resolvers = {
@@ -76,10 +83,14 @@ const resolvers = {
         addFile: async (parent, args) => {
             return await FileController.addFile(args)
         },
-
         changeTaskColumn: async (parent, args) => {
-            return await TaskController.changeColumn(args)
-        },
+            const taskUpdated = await TaskController.changeColumn(args);
+            console.log("Publicando evento TASK_COLUMN_CHANGED:", taskUpdated);
+            pubsub.publish("TASK_COLUMN_CHANGED", {
+              taskColumnChanged: taskUpdated
+            });
+            return taskUpdated;
+          },
         updateTask: async (parent, args) => {
             return await TaskController.updateTask(args)
         },
@@ -95,6 +106,16 @@ const resolvers = {
         },
         removeFile: async (parent, args) => {
             return await FileController.removeFile(args)
+        },
+    },
+
+    // Definimos la key Subscription en los resolvers 
+    Subscription: {
+        taskColumnChanged: {
+            subscribe: (parent, args, context) => {
+            // Aquí sí tendrás context.pubsub
+            return context.pubsub.asyncIterator(["TASK_COLUMN_CHANGED"]);
+            },
         },
     },
 }

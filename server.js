@@ -1,36 +1,41 @@
-/* 
-  Requirements
-*/
-// Config
-const config = require("./config/config");
-
-// mongoDB
-require("./config/database");
-
-// Server basics
+// App
 const express = require("express");
+const app = express();
 const { createServer } = require("http");
+const httpServer = createServer(app);
 
-// Apollo Server
-const { ApolloServer } = require("apollo-server-express");
-// const {
-//   ApolloServerPluginLandingPageLocalDefault,
-// } = require("apollo-server-core");
 
-// GraphQL Squema
-const { typeDefs, resolvers } = require("./schema");
-
-// Socket IO Util
-const { initSocket } = require('./socket');
-
-/*
-  Multer
-*/
-
-// Handle files
+// Files handling
 const multer = require("multer");
 const fs = require("fs");
 const path = require("path");
+
+// Config
+const config = require("./config/config");
+
+// Init mongoDB
+const database = require("./config/database");
+
+// Schema
+const { typeDefs, resolvers } = require("./schema");
+
+// Apollo
+const { ApolloServer } = require("apollo-server-express");
+const {
+  ApolloServerPluginLandingPageLocalDefault,
+} = require("apollo-server-core");
+
+// Socket IO
+const { initSocket } = require('./socket');
+
+//importamos putsub
+const pubsub = require("./pubsub");
+
+//Imports para suscripciones en Apollo 3 o 4 en lugar de utilizar installSubscriptionHandlers que es para apollo 2
+const { makeExecutableSchema } = require("@graphql-tools/schema");
+const { SubscriptionServer } = require("subscriptions-transport-ws");
+const { execute, subscribe } = require("graphql");
+
 
 // Set up storage configuration for multer
 const storage = multer.diskStorage({
@@ -50,51 +55,56 @@ const storage = multer.diskStorage({
 // Create the multer instance
 const upload = multer({ storage: storage });
 
-/*
-  Run
-*/
-
 async function startServer(typeDefs, resolvers) {
   // Start express app
-  const app = express();
 
-  // Define apollo server
-  const server = new ApolloServer({
-    typeDefs,
-    resolvers,
-    csrfPrevention: true,
-    cache: "bounded",
-    subscriptions: {
-      onConnect: (connectionParams, webSocket, context) => {
-        console.log('Apollo Subscriptions - Connected!')
-      },
-      onDisconnect: (webSocket, context) => {
-        console.log('Apollo Subscriptions - Disconnected!')
-      },
-    }
-  //  plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
-  });
+  //Creamos el schema ejectable para la version 3 de Apollo
+  const schema = makeExecutableSchema({
+      typeDefs,
+      resolvers,
+    });
 
+    // Define apollo server
+    const server = new ApolloServer({
+      schema,
+      csrfPrevention: true,
+      cache: "bounded",
+      plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
+      //añadimos context
+      context: () => {
+        // Aquí devolvemos el objeto que tendrán los resolvers
+        return { pubsub };
+      },
+    });
 
   // Start apollo
   await server.start();
 
-  // Add express middleware to Apollo server
+
+  // Integrate with Express
   server.applyMiddleware({ app });
 
-  // Create HTTP server
-  const httpServer = createServer(app);
-
-  // Socket.io
-  initSocket(httpServer)
-
-  // Handle pubsub with apollo
-  // server.installSubscriptionHandlers(httpServer)
+  
+  // SubscriptionServer creado manualmente para las nuevas versiones de apollo
+  SubscriptionServer.create(
+    {
+      schema,
+      execute,
+      subscribe,
+      onConnect: async (connectionParams, webSocket) => {
+        return { pubsub };
+      },
+    },
+    {
+      server: httpServer,
+      path: server.graphqlPath,
+    }
+  );
+  
 
   // Serve static
   app.use(express.static("public"));
 
-  // Download file endpoint
   app.get('/download', (req, res) => {
     const { url, name } = req.query;
 
@@ -120,7 +130,6 @@ async function startServer(typeDefs, resolvers) {
     });
   });
   
-  // Assests endpoint
   app.post("/assets", upload.single('file'), (req, res) => {
     if (!req.file) {
       return res.status(400).json({ message: "Archivo no encontrado." });
@@ -134,16 +143,17 @@ async function startServer(typeDefs, resolvers) {
     });
   });
 
-  // Fallback
   app.get('/', (req, res) => {
     res.redirect("/Html/index.html");
   });
 
+  // Socket.io
+  initSocket(httpServer)
+
   // Listen
-  await new Promise(resolve => httpServer.listen(config.port, resolve));
-  console.log(`🚀 Server ready at http://localhost:${config.port}${server.graphqlPath}`);
-  console.log(`🚀 Subscriptions ready at ws://localhost:${config.port}${server.subscriptionsPath}`);
-  return { server, app, httpServer };
+  httpServer.listen(config.port, () => {
+    console.log(`Listening on port: ${config.port}`);
+  });
 }
 
 startServer(typeDefs, resolvers);
