@@ -62,6 +62,7 @@ body {
     border-radius: 10px;
     cursor: pointer;
     word-wrap: break-word;
+    user-select: none;
 }
 
 .tasks{

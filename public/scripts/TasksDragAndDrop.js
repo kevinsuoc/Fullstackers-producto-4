@@ -6,11 +6,12 @@ import { socket } from './socket.js';
 let dropTargetTask = null;
 let dropTargetColumn = null;
 let draggedTask = null;
+let separador = null;
 
 // ondragstart event listener: sets dragged if a "task" is being drag
 // ondragstart ="dragStartHandler(event)"
 function dragStartHandler(event){
-    draggedTask = event.target
+    draggedTask = event.target.closest(".task")
 
     event.dataTransfer.effectAllowed = "move";
     event.target.style.backgroundColor = '#242424';
@@ -25,6 +26,17 @@ function dragStartHandler(event){
     event.dataTransfer.setDragImage(img, 25, 25)
 
     setTimeout(() => img.remove(), 0);
+
+    separador = document.createElement("div")
+    separador.id = "taskSeparator"
+    separador.style.backgroundColor = "gray";
+    separador.style.height = "3px"
+    separador.style.display = "block"
+    separador.style.margin = "-6px 5px"
+    separador.style.padding = "0";
+    separador.style.borderRadius = "10px"
+    separador.style.position = "absolute"
+    separador.style.width = `${event.target.getBoundingClientRect().width}px`
 }
 window.dragStartHandler = dragStartHandler
 
@@ -51,9 +63,9 @@ function dragEnterHandler(event){
     dropTargetColumn.style.borderColor = "#007bff"
 
     if (target.classList.contains("tasks")) {
-        target.appendChild(draggedTask)
-    } else if (dropTargetTask && dropTargetTask != draggedTask){
-        dropTargetTask.insertAdjacentElement("beforebegin", draggedTask)
+        target.appendChild(separador)
+    } else if (dropTargetTask){
+        dropTargetTask.insertAdjacentElement("beforebegin", separador)
     }
 }
 window.dragEnterHandler = dragEnterHandler
@@ -80,17 +92,18 @@ function dragEndHandler(event) {
     document.getElementById('doing-tasks').style.borderColor  = '#242424';
     document.getElementById('done-tasks').style.borderColor  = '#242424';
 
-    let lineaBreak = document.getElementById("taskSeparator")
-    if (lineaBreak){
-        lineaBreak.remove()
-    }
+    if (separador)
+        separador.remove()
 
+    separador = null;
     draggedTask = null;
 }
 window.dragEndHandler = dragEndHandler
 
 // ondragdrop="dropHandler(event)"
 function dropHandler(event) {
+    if (!draggedTask)
+        return
     // Necessary to override browser default
     event.preventDefault();
 
