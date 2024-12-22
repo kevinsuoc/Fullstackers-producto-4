@@ -1,7 +1,7 @@
 // Source: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/drop_event
 // Icons source. https://www.flaticon.com/
 import { changeTaskColumn } from './querisFr.js';
-import { socket } from './socket.js';
+import { socket, wsClient } from './socket.js';
 
 let dropTargetTask = null;
 let dropTargetColumn = null;
@@ -151,16 +151,50 @@ async function moverLS(taskId, targetColumn, dropTarget){
     const result = await changeTaskColumn(urlId, taskId, idColumna, dropTarget.id);
 }  
 
-socket.on("taskColumnChanged", (arg) => {
-    let dropTarget = document.getElementById(arg.topTaskID)
-    let task = document.getElementById(arg.id)
-    if (task){
-        if (dropTarget.classList.contains("tasks")) {
-            task.parentNode.removeChild(task);
-            dropTarget.appendChild(task);
-        } else if (dropTarget.classList.contains("task")) {
-            task.parentNode.removeChild(task);
-            dropTarget.insertAdjacentElement("beforebegin", task);
+// socket.on("taskColumnChanged", (arg) => {
+//     console.log("Socket arg", arg)
+//     let dropTarget = document.getElementById(arg.topTaskID)
+//     let task = document.getElementById(arg.id)
+//     if (task){
+//         if (dropTarget.classList.contains("tasks")) {
+//             task.parentNode.removeChild(task);
+//             dropTarget.appendChild(task);
+//         } else if (dropTarget.classList.contains("task")) {
+//             task.parentNode.removeChild(task);
+//             dropTarget.insertAdjacentElement("beforebegin", task);
+//         }
+//     }
+// })
+
+
+const query = `
+    subscription {
+        taskColumnChanged {
+            columnId,
+            id,
+            panelId,
+            topTaskID,
         }
     }
-})
+`;
+
+wsClient.request({ query }).subscribe({
+    next(data) {
+        let arg = data.data.taskColumnChanged
+
+        let dropTarget = document.getElementById(arg.topTaskID)
+        let task = document.getElementById(arg.id)
+        if (task){
+            if (dropTarget.classList.contains("tasks")) {
+                task.parentNode.removeChild(task);
+                dropTarget.appendChild(task);
+            } else if (dropTarget.classList.contains("task")) {
+                task.parentNode.removeChild(task);
+                dropTarget.insertAdjacentElement("beforebegin", task);
+            }
+        }
+    },
+    error(err) {
+        console.error("Error con WS: ", err);
+    }
+});

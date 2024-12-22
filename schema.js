@@ -5,6 +5,7 @@ const { gql } = require('apollo-server-express')
 const TaskController = require('./controllers/TaskController')
 const PanelController = require('./controllers/PanelController')
 const FileController = require('./controllers/FileController')
+const pubsub = require('./pubsub');
 
 const typeDefs = gql(`
    type File{
@@ -52,6 +53,19 @@ const typeDefs = gql(`
         removeTask(panelId: ID!, id: ID!): Task,
         removeFile(id: ID!, taskId: ID!, panelId: ID!): File
     }
+
+    type TaskMoved {
+        columnId: Int!
+        id: ID!
+        panelId: ID!
+        topTaskID: String!
+    }
+
+    # Creamos la subscription
+    type Subscription 
+    {
+        taskColumnChanged: TaskMoved
+    }
 `)
 
 const resolvers = {
@@ -76,9 +90,12 @@ const resolvers = {
         addFile: async (parent, args) => {
             return await FileController.addFile(args)
         },
-
         changeTaskColumn: async (parent, args) => {
-            return await TaskController.changeColumn(args)
+            const taskUpdated = await TaskController.changeColumn(args);
+            pubsub.publish("TASK_COLUMN_CHANGED", {
+                taskColumnChanged: taskUpdated
+            });
+            return taskUpdated;
         },
         updateTask: async (parent, args) => {
             return await TaskController.updateTask(args)
@@ -95,6 +112,16 @@ const resolvers = {
         },
         removeFile: async (parent, args) => {
             return await FileController.removeFile(args)
+        },
+    },
+
+    // Definimos la key Subscription en los resolvers 
+    Subscription: {
+        taskColumnChanged: {
+            subscribe: () => {
+            // Aquí sí tendrás context.pubsub
+            return pubsub.asyncIterator(["TASK_COLUMN_CHANGED"]);
+            },
         },
     },
 }

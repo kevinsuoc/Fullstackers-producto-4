@@ -46,10 +46,8 @@ async function changeColumn(args){
         panel.tasks.push(newTask)
     }
     const savedPanel = await panel.save()
-    if (savedPanel && io){
-        io.emit("taskColumnChanged", args)
-    }
-    return newTask
+
+    return args
 }
 
 async function updateTask(args){

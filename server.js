@@ -66,10 +66,10 @@ async function startServer(typeDefs, resolvers) {
     cache: "bounded",
     subscriptions: {
       onConnect: (connectionParams, webSocket, context) => {
-        console.log('Apollo Subscriptions - Connected!')
+        // console.log('Apollo subscriptor conectado!')
       },
       onDisconnect: (webSocket, context) => {
-        console.log('Apollo Subscriptions - Disconnected!')
+        // console.log('Apollo subscriptor desconectado!')
       },
     }
   //  plugins: [ApolloServerPluginLandingPageLocalDefault({ embed: true })],
@@ -141,8 +141,8 @@ async function startServer(typeDefs, resolvers) {
 
   // Listen
   await new Promise(resolve => httpServer.listen(config.port, resolve));
-  console.log(`🚀 Server ready at http://localhost:${config.port}${server.graphqlPath}`);
-  console.log(`🚀 Subscriptions ready at ws://localhost:${config.port}${server.subscriptionsPath}`);
+  console.log(`Server http: http://localhost:${config.port}${server.graphqlPath}`);
+  console.log(`Server ws: ws://localhost:${config.port}${server.subscriptionsPath}`);
   return { server, app, httpServer };
 }
 
