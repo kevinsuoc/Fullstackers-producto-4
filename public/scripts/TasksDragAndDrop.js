@@ -16,6 +16,7 @@ function dragStartHandler(event){
     event.dataTransfer.effectAllowed = "move";
     event.target.style.backgroundColor = '#242424';
 
+    // Imagen de arrastre
     const img = new Image();
     img.src = "../assets/drag.png";
     img.style.width = "50px";
@@ -27,6 +28,7 @@ function dragStartHandler(event){
 
     setTimeout(() => img.remove(), 0);
 
+    // Crear separador 
     separador = document.createElement("div")
     separador.id = "taskSeparator"
     separador.style.backgroundColor = "gray";
@@ -43,6 +45,8 @@ window.dragStartHandler = dragStartHandler
 // ondragover="dragOverHandler(event)"
 function dragOverHandler(event) {
     event.preventDefault();
+
+    // Personalizar icono de arrastre (Podria ser copiar o link)
     event.dataTransfer.dropEffect = "move";
 }
 window.dragOverHandler = dragOverHandler
@@ -53,6 +57,7 @@ function dragEnterHandler(event){
 
     event.dataTransfer.dropEffect = "move";
 
+    // Color clumna
     if (dropTargetColumn)
         dropTargetColumn.style.borderColor = "#242424";
 
@@ -62,6 +67,7 @@ function dragEnterHandler(event){
 
     dropTargetColumn.style.borderColor = "#007bff"
 
+    // Agregar separador
     if (target.classList.contains("tasks")) {
         target.appendChild(separador)
     } else if (dropTargetTask){
@@ -76,6 +82,7 @@ function dragLeaveHandler(event){
 
     const dropZone = event.target.closest(".tasks");
 
+    // Para cuando el raton sale de un contenedor de tareas
     if (dropZone && !dropZone.contains(event.relatedTarget)) {
         dropZone.style.borderColor = "#242424";
         if (document.getElementById("taskSeparator"))
@@ -88,6 +95,7 @@ window.dragLeaveHandler = dragLeaveHandler
 function dragEndHandler(event) {
     event.target.style.backgroundColor = '#1170dd';
 
+    // Resetamos el color de las columnas (Por si se sale con esc o de alguna forma que no active onleave)
     document.getElementById('todo-tasks').style.borderColor  = '#242424';
     document.getElementById('doing-tasks').style.borderColor  = '#242424';
     document.getElementById('done-tasks').style.borderColor  = '#242424';
