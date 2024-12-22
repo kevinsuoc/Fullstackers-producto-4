@@ -89,7 +89,7 @@ async function startServer(typeDefs, resolvers) {
   initSocket(httpServer)
 
   // Handle pubsub with apollo
-  // server.installSubscriptionHandlers(httpServer)
+  server.installSubscriptionHandlers(httpServer)
 
   // Serve static
   app.use(express.static("public"));
