@@ -31,17 +31,18 @@ export function getCodeSandboxHost(port) {
 }
 
 export function getHost() {
-  // return "localhost:8080"
-  return `${getCodeSandboxHost(8080)}`;
+  return "localhost:8080"
+  // return `${getCodeSandboxHost(8080)}`;
 }
 
 export function getWsEndpoint() {
-  return `wss://${getCodeSandboxHost(8080)}/graphql`;
+  // return `wss://${getCodeSandboxHost(8080)}/graphql`;
+  return `ws://${getCodeSandboxHost(8080)}/graphql`;
 }
 
 export function getGqlEndpoint() {
-  // return `http://${getHost()}/graphql`;
-  return `https://${getHost()}/graphql`;
+  return `http://${getHost()}/graphql`;
+  // return `https://${getHost()}/graphql`;
 }
 
 export async function updateTask(
@@ -197,10 +198,17 @@ export async function addUser({ name, password, token }) {
     }
 
     const result = await response.json();
+    if (result.errors) {
+      alert("nombre de usuario ya existe");
+      return null; 
+    }
+
 
     return result;
   } catch (error) {
+    console.log("ca")
     console.log(error);
+      alert(error);
   }
 }
 

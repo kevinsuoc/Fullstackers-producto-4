@@ -1,16 +1,27 @@
 const { User } = require('../models/User')
 
 async function addUser(args){
-    const existingUser = await User.find({token: args.token}).exec()
-
-    if (existingUser)
-        return null;
+    console.log("entro");
+    const existingUser = await User.findOne({name: args.name}).exec()
+    if (existingUser){
+        return {
+            error: {
+                code: "USER_ALREADY_EXISTS",
+                message: "A user with this name already exists.",
+                details: {
+                    name: args.name
+                }
+            }
+        };
+    }
 
     const user = new User({
-        name: args.nombre,
-        password: args.description, 
+        name: args.name,
+        password: args.password, 
         token: args.token,
     })
+    console.log("creo");
+    console.log(user);
     
     await user.save()
 
