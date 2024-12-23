@@ -18,7 +18,7 @@ wsClient.request({ query }).subscribe({
         if (arg.name = localStorage.getItem('name')){
             localStorage.removeItem('token')
             localStorage.removeItem('name')
-            window.location.href = "login.html"
+            window.location.href = "/login"
         }
     },
     error(err) {

@@ -133,10 +133,22 @@ async function startServer(typeDefs, resolvers) {
       mimetype: req.file.mimetype,
     });
   });
+  app.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/Html', 'login.html'));
+  });
+  app.get('/register', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/Html', 'register.html'));
+  });
+  app.get('/index', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public/Html', 'index.html'));
+  });
+  app.get('/tablero', (req, res) =>{
+    res.sendFile(path.join(__dirname, 'public/Html', 'tablero.html'));
+  });
 
   // Fallback
   app.get('/', (req, res) => {
-    res.redirect("/Html/index.html");
+    res.sendFile(path.join(__dirname, 'public/Html', 'login.html'));
   });
 
   // Listen

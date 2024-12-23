@@ -1,7 +1,23 @@
 // Source: https://developer.mozilla.org/en-US/docs/Web/API/HTMLElement/drop_event
 // Icons source. https://www.flaticon.com/
-import { changeTaskColumn } from './querisFr.js';
+import { existUser, changeTaskColumn } from './querisFr.js';
 import { socket, wsClient } from './socket.js';
+
+if(localStorage.getItem('token')){
+    if(await existUser(localStorage.getItem('token'))){
+        console.log("Correcto");
+    }
+    else{
+        window.location.href = '/login';
+    }
+}else{
+    window.location.href = '/login';
+}
+
+document.getElementById('logoutButton').addEventListener('click', function() {
+    localStorage.clear();
+    window.location.href = '/login';
+});
 
 let dropTargetTask = null;
 let dropTargetColumn = null;

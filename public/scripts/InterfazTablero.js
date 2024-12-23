@@ -16,7 +16,7 @@ function validarDatos(elemento){
 
 document.getElementById('logoutButton').addEventListener('click', function() {
     localStorage.clear();
-    window.location.href = 'login.html';
+    window.location.href = '/login';
 });
 
 // Función para manejar la creación de un nuevo tablero
@@ -69,13 +69,13 @@ document.getElementById('confirmCreateBoardButton').addEventListener('click', as
                 <h1>${nuevoPanel.name}</h1>
                     
                 <button type="button" class="btn-close" aria-label="Close" onclick="deleteBoard('${nuevoPanel.id}')"></button>
-                <a href="tablero.html?id=${nuevoPanel.id}&name=${encodeURIComponent(nuevoPanel.name)}" class="btn btn-link">Abrir</a>
+                <a href="/tablero?id=${nuevoPanel.id}&name=${encodeURIComponent(nuevoPanel.name)}" class="btn btn-link">Abrir</a>
                 <a onclick="updateBoard('${nuevoPanel.id}')" class="btn btn-link">Editar</a>
             `;
             boardList.appendChild(boardItem);
 
             // Redirigir automáticamente al nuevo tablero
-            window.location.href = `tablero.html?id=${nuevoPanel.id}&name=${encodeURIComponent(nuevoPanel.name)}`;
+            window.location.href = `/tablero?id=${nuevoPanel.id}&name=${encodeURIComponent(nuevoPanel.name)}`;
         }else{
             console.error("Error al añadir el panel");
         }
@@ -162,14 +162,13 @@ window.updateBoard = updateBoard
 window.onload = async function() {
     if(localStorage.getItem('token')){
         if(await existUser(localStorage.getItem('token'))){
-            window.location.href = 'index.html';
-            console.log(localStorage.getItem('token'));
+            console.log("Correcto");
         }
         else{
-            console.log(localStorage.getItem('token'));
-
-            window.location.href = 'login.html';
+            window.location.href = '/login';
         }
+    }else{
+        window.location.href = '/login';
     }
     try{
         const response = await getPanels();
@@ -184,7 +183,7 @@ window.onload = async function() {
                     <p class="hidden">descripcion: <span>${panel.descripcion}</span></p>
                     <p class="hidden">dueño: <span>${panel.dueno}</span></p>
                     <button type="button" class="btn-close" aria-label="Close" onclick="deleteBoard('${panel.id}')"></button>
-                    <a href="/Html/tablero.html?id=${panel.id}&name=${encodeURIComponent(panel.name)}" class="btn btn-link">Abrir</a>
+                    <a href="/tablero?id=${panel.id}&name=${encodeURIComponent(panel.name)}" class="btn btn-link">Abrir</a>
                     <a onclick="updateBoard('${panel.id}')" class="btn btn-link">Editar</a>
                 `;
                 boardList.appendChild(boardItem);
@@ -209,7 +208,7 @@ socket.on("panelAdded", (arg) => {
         <p class="hidden">descripcion: <span>${arg.descripcion}</span></p> 
         <p class="hidden">dueño: <span>${arg.dueno}</span></p>
         <button type="button" class="btn-close" aria-label="Close" onclick="deleteBoard('${arg._id}')"></button>
-        <a href="/Html/tablero.html?id=${arg._id}&name=${encodeURIComponent(arg.name)}" class="btn btn-link">Abrir</a>
+        <a href="/tablero?id=${arg._id}&name=${encodeURIComponent(arg.name)}" class="btn btn-link">Abrir</a>
         <a onclick="updateBoard('${arg._id}')" class="btn btn-link">Editar</a>
     `;
     boardList.appendChild(boardItem);

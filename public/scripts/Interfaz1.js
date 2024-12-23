@@ -44,7 +44,7 @@ socket.on("taskRemoved", (arg) => {
 
 window.onload = async function () {
   if(!localStorage.getItem('token')){
-    window.location.href = '/login.html';
+    window.location.href = '/login';
   }
   //if()
   const listaTodo = document.getElementById("todo-tasks");

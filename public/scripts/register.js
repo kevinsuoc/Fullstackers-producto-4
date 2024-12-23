@@ -20,7 +20,7 @@ document.getElementById('registerForm').addEventListener('submit', async functio
         let user = await addUser({name: name, password: hashpsw, token: tok});
         localStorage.setItem('token', tok);
         localStorage.setItem('name', name);
-        window.location.href = 'login.html';
+        window.location.href = '/login';
     }
     catch(error){
         console.log(error);
