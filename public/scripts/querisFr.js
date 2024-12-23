@@ -36,7 +36,7 @@ export function getHost() {
 }
 
 export function getWsEndpoint() {
-  return `ws://${getCodeSandboxHost(8080)}/graphql`;
+  return `wss://${getCodeSandboxHost(8080)}/graphql`;
 }
 
 export function getGqlEndpoint() {
