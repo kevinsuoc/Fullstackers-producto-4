@@ -163,7 +163,7 @@ window.onload = async function() {
     if(localStorage.getItem('token')){
         if(await existUser(localStorage.getItem('token'))){
             const user = localStorage.getItem('name');
-            const userEl = document.getElementById('usuarioLogTab');
+            const userEl = document.getElementById('usuarioLog');
             userEl.innerText = user;
             console.log("Correcto");
         }
