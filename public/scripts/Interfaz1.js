@@ -1,6 +1,6 @@
 // INTERFAZ 1: Eliminación de tareas y carga de tareas
 
-import { getPanel, removeTask } from "./querisFr.js";
+import { existUser, getPanel, removeTask } from "./querisFr.js";
 import { socket } from "./socket.js";
 import { printArch } from "./Interfaz3.js";
 
