@@ -12,12 +12,13 @@ const query = `
 
 wsClient.request({ query }).subscribe({
     next(data) {
+        console.log("data", data)
         let arg = data.data.loginSubscription
 
         if (arg.name = localStorage.getItem('name')){
             localStorage.removeItem('token')
             localStorage.removeItem('name')
-            href('/')
+            window.location.href = "login.html"
         }
     },
     error(err) {
