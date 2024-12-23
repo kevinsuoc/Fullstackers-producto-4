@@ -5,6 +5,7 @@ const { gql } = require('apollo-server-express')
 const TaskController = require('./controllers/TaskController')
 const PanelController = require('./controllers/PanelController')
 const FileController = require('./controllers/FileController')
+const UserController = require('./controllers/UserController')
 const pubsub = require('./pubsub');
 
 const typeDefs = gql(`
@@ -34,6 +35,13 @@ const typeDefs = gql(`
         tasks: [Task!]!
     }
 
+    type User {
+        id: ID!
+        name: String!
+        password: String!
+        token: String!
+    }
+
     type Query {
         panel(id: ID!): Panel
         panels: [Panel]
@@ -52,6 +60,9 @@ const typeDefs = gql(`
         removePanel(id: ID!): Panel,
         removeTask(panelId: ID!, id: ID!): Task,
         removeFile(id: ID!, taskId: ID!, panelId: ID!): File
+
+        addUser(name: String!, password: String!, token: String!): User
+        login(name: String!, password: String!): User
     }
 
     type TaskMoved {
@@ -116,6 +127,12 @@ const resolvers = {
         },
         removeFile: async (parent, args) => {
             return await FileController.removeFile(args)
+        },
+        addUser: async (parent, args) => {
+            return await UserController.addUser(args)
+        },
+        login: async (parent, args) => {
+            return await UserController.login(args)
         },
     },
 
