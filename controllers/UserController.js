@@ -1,13 +1,29 @@
 const { User } = require('../models/User')
 
+async function addUser(args){
+    const existingUser = await User.find({token: args.token}).exec()
 
-async function addUser(){
+    if (existingUser)
+        return null;
+
+    const user = new User({
+        name: args.nombre,
+        password: args.description, 
+        token: args.token,
+    })
     
-    console.log("Add user")
+    await user.save()
+
+    return user;
 }
 
-async function login(){
-    console.log("Login")
+async function login(args){
+    const user = await User.find({name: args.name}).exec()
+
+    if (user.password != args.password)
+        return null
+
+    return user;
 }
 
 module.exports = {
