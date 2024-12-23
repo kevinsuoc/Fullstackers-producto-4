@@ -77,6 +77,11 @@ const typeDefs = gql(`
     {
         taskColumnChanged: TaskMoved
     }
+
+    type Subscription 
+    {
+        loginSubscription: User
+    }
 `)
 
 const resolvers = {
@@ -132,7 +137,13 @@ const resolvers = {
             return await UserController.addUser(args)
         },
         login: async (parent, args) => {
-            return await UserController.login(args)
+            let user = await UserController.login(args)
+
+            pubsub.publish("USER_LOGGED_IN", {
+                loginSubscription: user,
+            });
+
+            return user;
         },
     },
 
@@ -142,6 +153,11 @@ const resolvers = {
             subscribe: () => {
             // context.pubsub
             return pubsub.asyncIterator(["TASK_COLUMN_CHANGED"]);
+            },
+        },
+        loginSubscription: {
+            subscribe: () => {
+            return pubsub.asyncIterator(["USER_LOGGED_IN"]);
             },
         },
     },
