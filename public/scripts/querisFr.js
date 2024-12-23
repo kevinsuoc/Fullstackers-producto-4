@@ -31,18 +31,18 @@ export function getCodeSandboxHost(port) {
 }
 
 export function getHost() {
-  return "localhost:8080"
-  // return `${getCodeSandboxHost(8080)}`;
+  // return "localhost:8080"
+  return `${getCodeSandboxHost(8080)}`;
 }
 
 export function getWsEndpoint() {
-  // return `wss://${getHost()}/graphql`;
-  return `ws://${getHost()}/graphql`;
+  return `wss://${getHost()}/graphql`;
+  // return `ws://${getHost()}/graphql`;
 }
 
 export function getGqlEndpoint() {
-  return `http://${getHost()}/graphql`;
-  // return `https://${getHost()}/graphql`;
+  // return `http://${getHost()}/graphql`;
+  return `https://${getHost()}/graphql`;
 }
 
 export async function updateTask(
