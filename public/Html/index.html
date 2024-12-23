@@ -11,10 +11,18 @@
 <body>
     <!-- Navbar -->
     <nav class="navbar color">
-        <div class="container-fluid d-flex justify-content-center">
-            <a class="navbar-brand" href="/Html/index.html">FULLSTACKERS</a>
+        <div class="container-fluid d-flex">
+            <div class="d-flex justify-content-center w-100">
+                <a class="navbar-brand" href="/Html/index.html">FULLSTACKERS</a>
+            </div>
+            
+            <div class="ml-auto">
+                <button type="button" class="btn btn-danger" id="logoutButton">Logout</button>
+            </div>
         </div>
     </nav>
+    
+    
 
     <!-- Pantalla de Dashboard -->
     <div class="container mt-4 text-center dashh">
@@ -24,7 +32,7 @@
                     <div class="card-body">
                         <h5 class="card-title">Crear Nuevo Tablero</h5>
                         <p class="card-text">Genera un nuevo tablero para organizar tus tareas.</p>
-                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBoardModal">
+                        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#createBoardModal" id="createBoardButton">
                             Crear Tablero
                         </button>
                     </div>

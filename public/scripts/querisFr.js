@@ -164,7 +164,7 @@ export async function updatePanel({ id, name, dueno, descripcion }) {
 
     const result = await response.json();
 
-    return result;
+    return result.data.existUser;
   } catch (error) {
     console.log(error);
   }
@@ -209,6 +209,38 @@ export async function addUser({ name, password, token }) {
     console.log("ca")
     console.log(error);
       alert(error);
+  }
+}
+
+export async function existUser(token) {
+  const query = `mutation($token: String!) {
+        existUser(token: $token)
+    }`;
+
+  try {
+    const response = await fetch(getGqlEndpoint(), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query,
+        variables: { token },
+      }),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(
+        `Error status: ${response.status}, message: ${errorMessage}`
+      );
+    }
+
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.log(error);
   }
 }
 

@@ -62,7 +62,8 @@ const typeDefs = gql(`
         removeFile(id: ID!, taskId: ID!, panelId: ID!): File
 
         addUser(name: String!, password: String!, token: String!): User
-        login(name: String!, password: String!): User
+        login(name: String!, password: String!): User,
+        existUser(token: String!): Boolean
     }
 
     type TaskMoved {
@@ -134,6 +135,9 @@ const resolvers = {
         login: async (parent, args) => {
             return await UserController.login(args)
         },
+        existUser: async (parent, args) => {
+            return await UserController.existUser(args)
+        }
     },
 
     // Definimos la key Subscription en los resolvers 

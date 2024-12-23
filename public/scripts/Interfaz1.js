@@ -43,6 +43,10 @@ socket.on("taskRemoved", (arg) => {
 });
 
 window.onload = async function () {
+  if(!localStorage.getItem('token')){
+    window.location.href = '/login.html';
+  }
+  //if()
   const listaTodo = document.getElementById("todo-tasks");
   const listaDoing = document.getElementById("doing-tasks");
   const listaDone = document.getElementById("done-tasks");

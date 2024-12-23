@@ -1,13 +1,12 @@
 const { User } = require('../models/User')
 
 async function addUser(args){
-    console.log("entro");
     const existingUser = await User.findOne({name: args.name}).exec()
     if (existingUser){
         return {
             error: {
                 code: "USER_ALREADY_EXISTS",
-                message: "A user with this name already exists.",
+                message: "Usuario ya existe.",
                 details: {
                     name: args.name
                 }
@@ -20,8 +19,6 @@ async function addUser(args){
         password: args.password, 
         token: args.token,
     })
-    console.log("creo");
-    console.log(user);
     
     await user.save()
 
@@ -29,15 +26,34 @@ async function addUser(args){
 }
 
 async function login(args){
-    const user = await User.find({name: args.name}).exec()
+    const user = await User.findOne({name: args.name}).exec()
 
     if (user.password != args.password)
-        return null
+        return {
+            error: {
+                code: "ERROR AUTH",
+                message: "mala auth amic",
+                details: {
+                    name: args.name
+                }
+            }
+        };
 
     return user;
 }
 
+
+async function existUser(args){
+    const user = await User.findOne({token: args.token}).exec()
+
+    if (user)
+        return true;
+    return false;
+}
+
+
 module.exports = {
     addUser,
-    login
+    login,
+    existUser
 }

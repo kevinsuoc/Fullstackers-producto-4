@@ -14,6 +14,11 @@ function validarDatos(elemento){
     }
 }
 
+document.getElementById('logoutButton').addEventListener('click', function() {
+    localStorage.clear();
+    window.location.href = 'login.html';
+});
+
 // Función para manejar la creación de un nuevo tablero
 document.getElementById('confirmCreateBoardButton').addEventListener('click', async function() {
     const newBoardName = document.getElementById('newBoardName');
@@ -111,6 +116,11 @@ document.getElementById('editBoardModal').addEventListener('submit', async funct
         modal.hide()
     }
 })
+
+document.getElementById('createBoardButton').addEventListener('click', function() {
+    const newBoardDueno = document.getElementById('newBoardDueno');
+    newBoardDueno.value = localStorage.getItem('name');
+});
 
 window.deleteBoard = deleteBoard;
 
