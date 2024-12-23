@@ -169,6 +169,43 @@ export async function updatePanel({ id, name, dueno, descripcion }) {
   }
 }
 
+export async function addUser({ name, password, token }) {
+  const query = `mutation($name: String!, $password: String!, $token: String!) {
+        addUser(name: $name, password: $password, token: $token) {
+          id,
+          name,
+        }
+    }`;
+
+  try {
+    const response = await fetch(getGqlEndpoint(), {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query,
+        variables: { name, password, token },
+      }),
+    });
+
+    if (!response.ok) {
+      const errorMessage = await response.text();
+      throw new Error(
+        `Error status: ${response.status}, message: ${errorMessage}`
+      );
+    }
+
+    const result = await response.json();
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+}
+
+
+
 export async function removePanel(id) {
   const query = `mutation($id: ID!) {
         removePanel(id: $id) {
