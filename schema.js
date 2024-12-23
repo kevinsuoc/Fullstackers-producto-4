@@ -95,6 +95,10 @@ const resolvers = {
             pubsub.publish("TASK_COLUMN_CHANGED", {
                 taskColumnChanged: taskUpdated
             });
+
+            // Log para verificar que la suscripción se activa
+            console.log("Subscription triggered for taskColumnChanged:", taskUpdated);
+
             return taskUpdated;
         },
         updateTask: async (parent, args) => {
@@ -119,7 +123,7 @@ const resolvers = {
     Subscription: {
         taskColumnChanged: {
             subscribe: () => {
-            // Aquí sí tendrás context.pubsub
+            // context.pubsub
             return pubsub.asyncIterator(["TASK_COLUMN_CHANGED"]);
             },
         },
