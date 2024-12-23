@@ -1,4 +1,4 @@
-import { addPanel, getPanels, removeTask, removePanel, updatePanel} from './querisFr.js';
+import { existUser, addPanel, getPanels, removeTask, removePanel, updatePanel} from './querisFr.js';
 import { socket } from './socket.js';
 
 let boardCount = 0;
@@ -160,6 +160,17 @@ window.updateBoard = updateBoard
 
 // Carga los tableros existentes al cargar la página
 window.onload = async function() {
+    if(localStorage.getItem('token')){
+        if(await existUser(localStorage.getItem('token'))){
+            window.location.href = 'index.html';
+            console.log(localStorage.getItem('token'));
+        }
+        else{
+            console.log(localStorage.getItem('token'));
+
+            window.location.href = 'login.html';
+        }
+    }
     try{
         const response = await getPanels();
         if(response){
