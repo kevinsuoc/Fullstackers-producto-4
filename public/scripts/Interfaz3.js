@@ -11,15 +11,11 @@ import {
 import { socket } from "./socket.js";
 import { formatoDueDate } from "./Interfaz1.js";
 import { generateFileHash } from "./Interfaz2.js";
+import { getHost, getGqlEndpoint, getWsEndpoint } from "./querisFr.js";
 
 // Esta variable almacenará la tarea a editar
 let taskToEdit = "";
 let archivosEditar = [];
-
-function getHost(){
-  return "http://localhost:8080"
-  // return `https://${getCodeSandboxHost(8080)}`
-}
 
 document
   .getElementById("uploadButton")
@@ -109,13 +105,10 @@ async function guardarArchivo(archivo, panelId, taskId) {
   formData.append("filename", archivo.name);
 
   try {
-    const response = await fetch(
-      getHost() + "/assets",
-      {
-        method: "POST",
-        body: formData,
-      }
-    );
+    const response = await fetch('https://' + getHost() + "/assets", {
+      method: "POST",
+      body: formData,
+    });
     const data = await response.json();
     let arch = await addFile({
       panelId: panelId,
@@ -210,9 +203,9 @@ async function descargarArch(archId, taskId, panelId) {
     panelId: panelId,
   });
   try {
-    let url = `${getHost()}/download?url=${
-      file.data.file.url
-    }&name=${file.data.file.filename}`;
+    let url = `https://${getHost()}/download?url=${file.data.file.url}&name=${
+      file.data.file.filename
+    }`;
     const a = document.createElement("a");
     a.href = url;
     a.download = file.data.file.filename;

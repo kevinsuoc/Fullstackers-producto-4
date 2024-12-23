@@ -30,9 +30,18 @@ export function getCodeSandboxHost(port) {
   return `${id}-${port}.${hostname}`;
 }
 
-function getHost() {
-  return "http://localhost:8080/graphql"
-  // return ``https://${getCodeSandboxHost(8080)}/graphql`;
+export function getHost() {
+  // return "localhost:8080"
+  return `${getCodeSandboxHost(8080)}`;
+}
+
+export function getWsEndpoint() {
+  return `ws://${getCodeSandboxHost(8080)}/graphql`;
+}
+
+export function getGqlEndpoint() {
+  // return `http://${getHost()}/graphql`;
+  return `https://${getHost()}/graphql`;
 }
 
 export async function updateTask(
@@ -55,7 +64,7 @@ export async function updateTask(
     }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,7 +106,7 @@ export async function addPanel({ name, dueno, descripcion }) {
     }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -134,7 +143,7 @@ export async function updatePanel({ id, name, dueno, descripcion }) {
     }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -171,7 +180,7 @@ export async function removePanel(id) {
     }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -208,7 +217,7 @@ export async function getPanels() {
       }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -239,7 +248,7 @@ export async function getFile({ fileId, taskId, panelId }) {
     }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -294,7 +303,7 @@ export async function getPanel(id) {
                 }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -337,7 +346,7 @@ export async function addTask(
     }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -389,7 +398,7 @@ export async function addFile({
     }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -439,7 +448,7 @@ export async function changeTaskColumn(
     }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -483,7 +492,7 @@ export async function removeTask(panelId, taskId) {
                 }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -513,7 +522,7 @@ export async function removeFile({ id, panelId, taskId }) {
                 }`;
 
   try {
-    const response = await fetch(getHost(), {
+    const response = await fetch(getGqlEndpoint(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
