@@ -77,12 +77,9 @@ const typeDefs = gql(`
     type Subscription 
     {
         taskColumnChanged: TaskMoved
-    }
-
-    type Subscription 
-    {
         loginSubscription: User
     }
+
 `)
 
 const resolvers = {
