@@ -43,8 +43,15 @@ socket.on("taskRemoved", (arg) => {
 });
 
 window.onload = async function () {
-  if(!localStorage.getItem('token')){
-    window.location.href = '/login';
+  if(localStorage.getItem('token')){
+    if(await existUser(localStorage.getItem('token'))){
+        console.log("Correcto");
+    }
+    else{
+        window.location.href = '/login';
+    }
+  }else{
+      window.location.href = '/login';
   }
   //if()
   const listaTodo = document.getElementById("todo-tasks");
