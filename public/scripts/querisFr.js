@@ -31,18 +31,18 @@ export function getCodeSandboxHost(port) {
 }
 
 export function getHost() {
-  return "localhost:8080"
-  // return `${getCodeSandboxHost(8080)}`;
+  // return "localhost:8080"
+  return `${getCodeSandboxHost(8080)}`;
 }
 
 export function getWsEndpoint() {
-  // return `wss://${getHost()}/graphql`;
-  return `ws://${getHost()}/graphql`;
+  return `wss://${getHost()}/graphql`;
+  // return `ws://${getHost()}/graphql`;
 }
 
 export function getGqlEndpoint() {
-  return `http://${getHost()}/graphql`;
-  // return `https://${getHost()}/graphql`;
+  // return `http://${getHost()}/graphql`;
+  return `https://${getHost()}/graphql`;
 }
 
 export async function updateTask(
@@ -200,15 +200,14 @@ export async function addUser({ name, password, token }) {
     const result = await response.json();
     if (result.errors) {
       alert("nombre de usuario ya existe");
-      return null; 
+      return null;
     }
-
 
     return result;
   } catch (error) {
-    console.log("ca")
+    console.log("ca");
     console.log(error);
-      alert(error);
+    alert(error);
   }
 }
 
@@ -244,7 +243,7 @@ export async function existUser(token) {
   }
 }
 
-export async function login({name, password}){
+export async function login({ name, password }) {
   const query = `mutation($name: String!, $password: String!) {
     login(name: $name, password: $password) {
       id,
@@ -260,7 +259,7 @@ export async function login({name, password}){
       },
       body: JSON.stringify({
         query,
-        variables: { name, password},
+        variables: { name, password },
       }),
     });
 
@@ -278,7 +277,6 @@ export async function login({name, password}){
     console.log(error);
   }
 }
-
 
 export async function removePanel(id) {
   const query = `mutation($id: ID!) {

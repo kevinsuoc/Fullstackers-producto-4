@@ -133,28 +133,16 @@ async function startServer(typeDefs, resolvers) {
       mimetype: req.file.mimetype,
     });
   });
-  app.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/Html', 'login.html'));
-  });
-  app.get('/register', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/Html', 'register.html'));
-  });
-  app.get('/index', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/Html', 'index.html'));
-  });
-  app.get('/tablero', (req, res) =>{
-    res.sendFile(path.join(__dirname, 'public/Html', 'tablero.html'));
-  });
 
   // Fallback
   app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public/Html', 'login.html'));
+    res.redirect("/Html/index.html");
   });
 
   // Listen
   await new Promise(resolve => httpServer.listen(config.port, resolve));
-  console.log(`Server http: http://localhost:${config.port}${server.graphqlPath}`);
-  console.log(`Server ws: ws://localhost:${config.port}${server.subscriptionsPath}`);
+  // console.log(`Server http: http://localhost:${config.port}${server.graphqlPath}`);
+  // console.log(`Server ws: ws://localhost:${config.port}${server.subscriptionsPath}`);
   return { server, app, httpServer };
 }
 
